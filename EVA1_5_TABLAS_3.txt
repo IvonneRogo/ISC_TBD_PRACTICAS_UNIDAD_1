@@ -1,0 +1,108 @@
+MySQL Shell 8.0.12
+
+Copyright (c) 2016, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+
+
+ MySQL  JS > \sql
+Switching to SQL mode... Commands end with ;
+
+ MySQL  SQL > \connect -c root@localhost
+The -c option is deprecated, please use --mysql or -mc instead
+Creating a Classic session to 'root@localhost'
+Please provide the password for 'root@localhost': ****
+Save password for 'root@localhost:3306'? [Y]es/[N]o/Ne[v]er (default No): y
+Fetching schema names for autocompletion... Press ^C to stop.
+Your MySQL connection id is 1
+Server version: 5.5.61 MySQL Community Server (GPL)
+No default schema selected; type \use <schema> to set one.
+
+ MySQL  localhost:3306  SQL > \use evaluacion1
+Default schema set to `evaluacion1`.
+Fetching table and column names from `evaluacion1` for auto-completion... Press ^C to stop.
+
+ MySQL  localhost:3306  evaluacion1  SQL > desc paises;
++------------+----------------------------------------------------+------+-----+---------+----------------+
+| Field      | Type                                               | Null | Key | Default | Extra          |
++------------+----------------------------------------------------+------+-----+---------+----------------+
+| clave      | int(11)                                            | NO   | PRI | NULL    | auto_increment |
+| nombre     | varchar(50)                                        | NO   |     | NULL    |                |
+| poblacion  | int(11)                                            | YES  |     | 1       |                |
+| continente | enum('AFRICA','AMERICA','ASIA','OCEANIA','EUROPA') | YES  |     | NULL    |                |
++------------+----------------------------------------------------+------+-----+---------+----------------+
+4 rows in set (0.1515 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > alter table paises change nombre nombre varchar(50) not null unique;
+Query OK, 0 rows affected (0.5962 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+
+ MySQL  localhost:3306  evaluacion1  SQL > desc paises;
++------------+----------------------------------------------------+------+-----+---------+----------------+
+| Field      | Type                                               | Null | Key | Default | Extra          |
++------------+----------------------------------------------------+------+-----+---------+----------------+
+| clave      | int(11)                                            | NO   | PRI | NULL    | auto_increment |
+| nombre     | varchar(50)                                        | NO   | UNI | NULL    |                |
+| poblacion  | int(11)                                            | YES  |     | 1       |                |
+| continente | enum('AFRICA','AMERICA','ASIA','OCEANIA','EUROPA') | YES  |     | NULL    |                |
++------------+----------------------------------------------------+------+-----+---------+----------------+
+4 rows in set (0.0200 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > insert into paises(nombre,poblacion,continente)
+                                       ... values('Mexico',120000000,'AMERICA');
+Query OK, 1 row affected (0.4845 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > SELECT * FROM PAISES;
++-------+--------+-----------+------------+
+| clave | nombre | poblacion | continente |
++-------+--------+-----------+------------+
+|     1 | Mexico | 120000000 | AMERICA    |
++-------+--------+-----------+------------+
+1 row in set (0.1664 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > insert into paises(nombre,poblacion,continente) values('Mexico',120000000,'AMERICA');
+ERROR: 1062 (23000): Duplicate entry 'Mexico' for key 'nombre'
+
+ MySQL  localhost:3306  evaluacion1  SQL > alter table personal add RFC varchar(50) not null unique;
+ERROR: 1062 (23000): Duplicate entry '' for key 'RFC'
+
+ MySQL  localhost:3306  evaluacion1  SQL > alter table personal add RFC varchar(50) unique;
+Query OK, 8 rows affected (0.4776 sec)
+
+Records: 8  Duplicates: 0  Warnings: 0
+
+ MySQL  localhost:3306  evaluacion1  SQL > insert into personal(nombre,apellido,departamento,rfc)
+                                       ... values('juan','perengano','INHUMANOS','ALGO123456789');
+Query OK, 1 row affected (0.3689 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > insert into personal(nombre,apellido,departamento,rfc) values('juan','perengano','INHUMANOS','ALGO123456789');
+ERROR: 1062 (23000): Duplicate entry 'ALGO123456789' for key 'RFC'
+
+ MySQL  localhost:3306  evaluacion1  SQL > /*EJERCICIO DE LA PAGINA*/
+ MySQL  localhost:3306  evaluacion1  SQL > create table trabajo(
+                                       ... id_trabajo int,
+                                       ... nombre_trabajo varchar(50) default '',
+                                       ... min_salario float default 8000,
+                                       ... max_salario float defualt null);
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'defualt null)' at line 5
+
+ MySQL  localhost:3306  evaluacion1  SQL > create table trabajo( id_trabajo int, nombre_trabajo varchar(50) default '', min_salario float default 8000, max_salario float null);
+Query OK, 0 rows affected (0.1633 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > desc trabajo;
++----------------+-------------+------+-----+---------+-------+
+| Field          | Type        | Null | Key | Default | Extra |
++----------------+-------------+------+-----+---------+-------+
+| id_trabajo     | int(11)     | YES  |     | NULL    |       |
+| nombre_trabajo | varchar(50) | YES  |     |         |       |
+| min_salario    | float       | YES  |     | 8000    |       |
+| max_salario    | float       | YES  |     | NULL    |       |
++----------------+-------------+------+-----+---------+-------+
+4 rows in set (0.0050 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL >

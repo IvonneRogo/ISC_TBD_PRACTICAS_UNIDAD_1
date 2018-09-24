@@ -1,0 +1,403 @@
+MySQL Shell 8.0.12
+
+Copyright (c) 2016, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+
+
+ MySQL  JS > \sql
+Switching to SQL mode... Commands end with ;
+
+ MySQL  SQL > connect -c root@localhost
+ERROR: Not connected.
+
+          ... fdrefr:;
+ERROR: Not connected.
+
+ MySQL  SQL > \connect -c root@localhost
+The -c option is deprecated, please use --mysql or -mc instead
+Creating a Classic session to 'root@localhost'
+Please provide the password for 'root@localhost': ****
+Save password for 'root@localhost:3306'? [Y]es/[N]o/Ne[v]er (default No): y
+Fetching schema names for autocompletion... Press ^C to stop.
+Your MySQL connection id is 1
+Server version: 5.5.61 MySQL Community Server (GPL)
+No default schema selected; type \use <schema> to set one.
+
+ MySQL  localhost:3306  SQL > \use evaluacion1
+Default schema set to `evaluacion1`.
+Fetching table and column names from `evaluacion1` for auto-completion... Press ^C to stop.
+
+ MySQL  localhost:3306  evaluacion1  SQL > desc carrera;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| nombre    | varchar(50) | YES  |     | NULL    |       |
+| creditos  | int(11)     | YES  |     | NULL    |       |
+| semestres | int(11)     | YES  |     | NULL    |       |
+| area      | varchar(50) | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+4 rows in set (0.0613 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > desc estudiante;
++------------------+-------------+------+-----+---------+-------+
+| Field            | Type        | Null | Key | Default | Extra |
++------------------+-------------+------+-----+---------+-------+
+| no_control       | varchar(10) | YES  |     | NULL    |       |
+| nombre           | varchar(50) | YES  |     | NULL    |       |
+| apellido_paterno | varchar(50) | YES  |     | NULL    |       |
+| apellido_materno | varchar(50) | YES  |     | NULL    |       |
+| direccion        | varchar(50) | YES  |     | NULL    |       |
+| fecha_nacimiento | date        | YES  |     | NULL    |       |
+| lugar_nacimiento | varchar(50) | YES  |     | NULL    |       |
+| pais_nacimiento  | varchar(50) | YES  |     | NULL    |       |
+| genero           | varchar(50) | YES  |     | NULL    |       |
+| no_telefono      | varchar(50) | YES  |     | NULL    |       |
++------------------+-------------+------+-----+---------+-------+
+10 rows in set (0.0175 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > alter table estudiante add constraint primary key (no_control);
+Query OK, 0 rows affected (0.0774 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+
+ MySQL  localhost:3306  evaluacion1  SQL > desc estudiante;
++------------------+-------------+------+-----+---------+-------+
+| Field            | Type        | Null | Key | Default | Extra |
++------------------+-------------+------+-----+---------+-------+
+| no_control       | varchar(10) | NO   | PRI |         |       |
+| nombre           | varchar(50) | YES  |     | NULL    |       |
+| apellido_paterno | varchar(50) | YES  |     | NULL    |       |
+| apellido_materno | varchar(50) | YES  |     | NULL    |       |
+| direccion        | varchar(50) | YES  |     | NULL    |       |
+| fecha_nacimiento | date        | YES  |     | NULL    |       |
+| lugar_nacimiento | varchar(50) | YES  |     | NULL    |       |
+| pais_nacimiento  | varchar(50) | YES  |     | NULL    |       |
+| genero           | varchar(50) | YES  |     | NULL    |       |
+| no_telefono      | varchar(50) | YES  |     | NULL    |       |
++------------------+-------------+------+-----+---------+-------+
+10 rows in set (0.1144 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > select * from estudiante;
+Empty set (0.0003 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > insert into estudiante(no_control,nombre) values('00112233','Pablo');
+Query OK, 1 row affected (0.0169 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > insert into estudiante(no_control,nombre) values('00112233','Pablo');/*intentar meter el mismo valor*/
+ERROR: 1062 (23000): Duplicate entry '00112233' for key 'PRIMARY'
+
+                                       ... fgh;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'fgh' at line 2
+
+ MySQL  localhost:3306  evaluacion1  SQL > show tables;
++-----------------------+
+| Tables_in_evaluacion1 |
++-----------------------+
+| carrera               |
+| estudiante            |
+| horario               |
+| materias              |
+| nueva_carrera         |
+| nueva_carrerota       |
+| paises                |
+| personal              |
+| personal2             |
+| trabajo               |
++-----------------------+
+10 rows in set (0.0006 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > desc materias;
++-----------------+--------------+------+-----+---------+-------+
+| Field           | Type         | Null | Key | Default | Extra |
++-----------------+--------------+------+-----+---------+-------+
+| nombre          | varchar(100) | YES  |     | NULL    |       |
+| creditos        | int(11)      | YES  |     | NULL    |       |
+| horas_teoricas  | int(11)      | YES  |     | NULL    |       |
+| horas_practicas | int(11)      | YES  |     | NULL    |       |
+| carrera         | varchar(3)   | YES  |     | NULL    |       |
+| semestre        | int(11)      | YES  |     | NULL    |       |
++-----------------+--------------+------+-----+---------+-------+
+6 rows in set (0.0130 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > select * from materias;
++------------+----------+----------------+-----------------+---------+----------+
+| nombre     | creditos | horas_teoricas | horas_practicas | carrera | semestre |
++------------+----------+----------------+-----------------+---------+----------+
+| si se pudo |      100 |           NULL |            NULL | NULL    |     NULL |
++------------+----------+----------------+-----------------+---------+----------+
+1 row in set (0.0003 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > alter table materias add constraint primary key (nombre,semestre);
+ERROR: 1265 (01000): Data truncated for column 'semestre' at row 1
+
+ MySQL  localhost:3306  evaluacion1  SQL > delete from materias where nombre='si se pudo';
+Query OK, 1 row affected (0.0318 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > select * from materias;
+Empty set (0.0003 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > alter table materias add constraint primary key (nombre,semestre);
+Query OK, 0 rows affected (0.0632 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+
+ MySQL  localhost:3306  evaluacion1  SQL > desc materias;
++-----------------+--------------+------+-----+---------+-------+
+| Field           | Type         | Null | Key | Default | Extra |
++-----------------+--------------+------+-----+---------+-------+
+| nombre          | varchar(100) | NO   | PRI |         |       |
+| creditos        | int(11)      | YES  |     | NULL    |       |
+| horas_teoricas  | int(11)      | YES  |     | NULL    |       |
+| horas_practicas | int(11)      | YES  |     | NULL    |       |
+| carrera         | varchar(3)   | YES  |     | NULL    |       |
+| semestre        | int(11)      | NO   | PRI | 0       |       |
++-----------------+--------------+------+-----+---------+-------+
+6 rows in set (0.0056 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > insert into materias(nombre,semestre) values('matematicas',1);
+Query OK, 1 row affected (0.0127 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > insert into materias(nombre,semestre) values('matematicas',2);
+Query OK, 1 row affected (0.0111 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > insert into materias(nombre,semestre) values('matematicas',2);
+ERROR: 1062 (23000): Duplicate entry 'matematicas-2' for key 'PRIMARY'
+
+ MySQL  localhost:3306  evaluacion1  SQL > create table compras(
+                                       ... nombre_cliente varchar(50),
+                                       ... fecha datetime,
+                                       ... cantidad float,
+                                       ... primary key(nombre_cliente,fecha));
+Query OK, 0 rows affected (0.0479 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > desc compras;
++----------------+-------------+------+-----+---------------------+-------+
+| Field          | Type        | Null | Key | Default             | Extra |
++----------------+-------------+------+-----+---------------------+-------+
+| nombre_cliente | varchar(50) | NO   | PRI |                     |       |
+| fecha          | datetime    | NO   | PRI | 0000-00-00 00:00:00 |       |
+| cantidad       | float       | YES  |     | NULL                |       |
++----------------+-------------+------+-----+---------------------+-------+
+3 rows in set (0.0047 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > insert into compras(nombre_cliente,fecha) values('Pablo','2018-09-11');
+Query OK, 1 row affected (0.0136 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > insert into compras(nombre_cliente,fecha) values('Pablo','2018-09-11');/*YA ESTA EN LA TABLA*/
+ERROR: 1062 (23000): Duplicate entry 'Pablo-2018-09-11 00:00:00' for key 'PRIMARY'
+
+                                       ... ;
+Query OK, 0 rows affected (0.0002 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > DESC COMPRAS;
++----------------+-------------+------+-----+---------------------+-------+
+| Field          | Type        | Null | Key | Default             | Extra |
++----------------+-------------+------+-----+---------------------+-------+
+| nombre_cliente | varchar(50) | NO   | PRI |                     |       |
+| fecha          | datetime    | NO   | PRI | 0000-00-00 00:00:00 |       |
+| cantidad       | float       | YES  |     | NULL                |       |
++----------------+-------------+------+-----+---------------------+-------+
+3 rows in set (0.0045 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > /*ELIMINAR LLAVE PRIMARIA*/
+ MySQL  localhost:3306  evaluacion1  SQL > alter table compras drop primary key;
+Query OK, 1 row affected (0.0779 sec)
+
+Records: 1  Duplicates: 0  Warnings: 0
+
+ MySQL  localhost:3306  evaluacion1  SQL > desc compras;
++----------------+-------------+------+-----+---------------------+-------+
+| Field          | Type        | Null | Key | Default             | Extra |
++----------------+-------------+------+-----+---------------------+-------+
+| nombre_cliente | varchar(50) | NO   |     |                     |       |
+| fecha          | datetime    | NO   |     | 0000-00-00 00:00:00 |       |
+| cantidad       | float       | YES  |     | NULL                |       |
++----------------+-------------+------+-----+---------------------+-------+
+3 rows in set (0.0052 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > show tables;
++-----------------------+
+| Tables_in_evaluacion1 |
++-----------------------+
+| carrera               |
+| compras               |
+| estudiante            |
+| horario               |
+| materias              |
+| nueva_carrera         |
+| nueva_carrerota       |
+| paises                |
+| personal              |
+| personal2             |
+| trabajo               |
++-----------------------+
+11 rows in set (0.0006 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > desc carrera;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| nombre    | varchar(50) | YES  |     | NULL    |       |
+| creditos  | int(11)     | YES  |     | NULL    |       |
+| semestres | int(11)     | YES  |     | NULL    |       |
+| area      | varchar(50) | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+4 rows in set (0.0053 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > alter table carrera add constraint primary key(nombre,area);
+ERROR: 1062 (23000): Duplicate entry 'Sistemas-Sistemas y Computacion' for key 'PRIMARY'
+
+ MySQL  localhost:3306  evaluacion1  SQL > select * from carrera;
++----------+----------+-----------+------------------------+
+| nombre   | creditos | semestres | area                   |
++----------+----------+-----------+------------------------+
+| Sistemas |      500 |         9 | Sistemas y Computacion |
+| Sistemas |      500 |         9 | Sistemas y Computacion |
+| Sistemas |      500 |         9 | Sistemas y Computacion |
+| Sistemas |      500 |         9 | Sistemas y Computacion |
+| Sistemas |      500 |         9 | Sistemas y Computacion |
+| Sistemas |      500 |         9 | Sistemas y Computacion |
++----------+----------+-----------+------------------------+
+6 rows in set (0.0003 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > truncate table carrera ;
+Query OK, 0 rows affected (0.0260 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > select * from carrera;
+Empty set (0.0003 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > alter table carrera add constraint primary key(nombre,area);
+Query OK, 0 rows affected (0.1625 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+
+ MySQL  localhost:3306  evaluacion1  SQL > alter table paises drop primary key;
+ERROR: 1075 (42000): Incorrect table definition; there can be only one auto column and it must be defined as a key
+
+ MySQL  localhost:3306  evaluacion1  SQL > desc paises;
++------------+----------------------------------------------------+------+-----+---------+----------------+
+| Field      | Type                                               | Null | Key | Default | Extra          |
++------------+----------------------------------------------------+------+-----+---------+----------------+
+| clave      | int(11)                                            | NO   | PRI | NULL    | auto_increment |
+| nombre     | varchar(50)                                        | NO   | UNI | NULL    |                |
+| poblacion  | int(11)                                            | YES  |     | 1       |                |
+| continente | enum('AFRICA','AMERICA','ASIA','OCEANIA','EUROPA') | YES  |     | NULL    |                |
++------------+----------------------------------------------------+------+-----+---------+----------------+
+4 rows in set (0.0047 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > desc personal;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| clave        | int(11)     | YES  |     | NULL    |       |
+| nombre       | varchar(50) | YES  |     | NULL    |       |
+| apellido     | varchar(50) | YES  |     | NULL    |       |
+| departamento | varchar(50) | YES  |     | NULL    |       |
+| salario      | float       | YES  |     | NULL    |       |
+| RFC          | varchar(50) | YES  | UNI | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+6 rows in set (0.0044 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > alter table carrera add constraint primary key(nombre,apellido);
+ERROR: 1068 (42000): Multiple primary key defined
+
+ MySQL  localhost:3306  evaluacion1  SQL > alter table personal add constraint primary key(nombre,apellido);
+ERROR: 1265 (01000): Data truncated for column 'apellido' at row 1
+
+ MySQL  localhost:3306  evaluacion1  SQL > alter tables personal add constraint primary key(nombre,apellido);
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'tables personal add constraint primary key(nombre,apellido)' at line 1
+
+ MySQL  localhost:3306  evaluacion1  SQL > desc personal;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| clave        | int(11)     | YES  |     | NULL    |       |
+| nombre       | varchar(50) | YES  |     | NULL    |       |
+| apellido     | varchar(50) | YES  |     | NULL    |       |
+| departamento | varchar(50) | YES  |     | NULL    |       |
+| salario      | float       | YES  |     | NULL    |       |
+| RFC          | varchar(50) | YES  | UNI | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+6 rows in set (0.0048 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > alter table personal add constraint primary key(nombre,apellido);
+ERROR: 1265 (01000): Data truncated for column 'apellido' at row 1
+
+ MySQL  localhost:3306  evaluacion1  SQL > select * from personal;
++-------+-----------+-----------+--------------+---------+---------------+
+| clave | nombre    | apellido  | departamento | salario | RFC           |
++-------+-----------+-----------+--------------+---------+---------------+
+|     1 | ivonne    | NULL      | NULL         |    NULL | NULL          |
+|     2 | juan      | perez     | sistemas     |   10000 | NULL          |
+|     3 | maria     | NULL      | NULL         |    NULL | NULL          |
+|     4 | paco      | NULL      | NULL         |    NULL | NULL          |
+|     5 | karla     | NULL      | NULL         |    NULL | NULL          |
+|     6 | pancracio | NULL      | NULL         |    NULL | NULL          |
+|     7 | luis      | NULL      | NULL         |    NULL | NULL          |
+|     8 | harry     | NULL      | NULL         |    NULL | NULL          |
+|  NULL | juan      | perengano | INHUMANOS    |    NULL | ALGO123456789 |
++-------+-----------+-----------+--------------+---------+---------------+
+9 rows in set (0.0008 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > truncate table personal ;
+Query OK, 0 rows affected (0.0170 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > alter table personal add constraint primary key(nombre,apellido);
+Query OK, 0 rows affected (0.1084 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+
+ MySQL  localhost:3306  evaluacion1  SQL > alter table paises modify clave int(11);
+Query OK, 1 row affected (0.0981 sec)
+
+Records: 1  Duplicates: 0  Warnings: 0
+
+ MySQL  localhost:3306  evaluacion1  SQL > desc paises;
++------------+----------------------------------------------------+------+-----+---------+-------+
+| Field      | Type                                               | Null | Key | Default | Extra |
++------------+----------------------------------------------------+------+-----+---------+-------+
+| clave      | int(11)                                            | NO   | PRI | 0       |       |
+| nombre     | varchar(50)                                        | NO   | UNI | NULL    |       |
+| poblacion  | int(11)                                            | YES  |     | 1       |       |
+| continente | enum('AFRICA','AMERICA','ASIA','OCEANIA','EUROPA') | YES  |     | NULL    |       |
++------------+----------------------------------------------------+------+-----+---------+-------+
+4 rows in set (0.0056 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > alter table paises drop primary key;
+Query OK, 1 row affected (0.0778 sec)
+
+Records: 1  Duplicates: 0  Warnings: 0
+
+ MySQL  localhost:3306  evaluacion1  SQL > desc paises;
++------------+----------------------------------------------------+------+-----+---------+-------+
+| Field      | Type                                               | Null | Key | Default | Extra |
++------------+----------------------------------------------------+------+-----+---------+-------+
+| clave      | int(11)                                            | NO   |     | 0       |       |
+| nombre     | varchar(50)                                        | NO   | PRI | NULL    |       |
+| poblacion  | int(11)                                            | YES  |     | 1       |       |
+| continente | enum('AFRICA','AMERICA','ASIA','OCEANIA','EUROPA') | YES  |     | NULL    |       |
++------------+----------------------------------------------------+------+-----+---------+-------+
+4 rows in set (0.0060 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL > alter table paises add constraint primary key(nombre,continente);
+Query OK, 1 row affected (0.0857 sec)
+
+Records: 1  Duplicates: 0  Warnings: 0
+
+ MySQL  localhost:3306  evaluacion1  SQL > desc paises;
++------------+----------------------------------------------------+------+-----+---------+-------+
+| Field      | Type                                               | Null | Key | Default | Extra |
++------------+----------------------------------------------------+------+-----+---------+-------+
+| clave      | int(11)                                            | NO   |     | 0       |       |
+| nombre     | varchar(50)                                        | NO   | PRI | NULL    |       |
+| poblacion  | int(11)                                            | YES  |     | 1       |       |
+| continente | enum('AFRICA','AMERICA','ASIA','OCEANIA','EUROPA') | NO   | PRI | AFRICA  |       |
++------------+----------------------------------------------------+------+-----+---------+-------+
+4 rows in set (0.0051 sec)
+
+ MySQL  localhost:3306  evaluacion1  SQL >
